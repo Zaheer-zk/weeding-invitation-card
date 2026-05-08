@@ -4,30 +4,49 @@ import { CoverFace, InsideLeftFace, InsideRightFace } from './Faces'
 const OPEN_ANGLE = -180
 const CLOSED_ANGLE = 0
 
+const MOBILE_PAGES = [
+  { key: 'cover', label: 'Cover' },
+  { key: 'couple', label: 'Couple' },
+  { key: 'events', label: 'Events' }
+]
+
 export default function InvitationCard({ visible }) {
   const [open, setOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [mobilePage, setMobilePage] = useState(0)
 
   const cardRef = useRef(null)
   const coverRef = useRef(null)
   const frontRef = useRef(null)
   const leftBackRef = useRef(null)
+  const isMobileRef = useRef(false)
 
   const target = useRef({ tx: 0, ty: 0, enter: 0, scaleFit: 1, coverAngle: 0 })
   const current = useRef({ tx: 0, ty: 0, enter: 0, scaleFit: 1, coverAngle: 0 })
-  const drag = useRef({ active: false, startX: 0, startAngle: 0, moved: 0 })
+  const drag = useRef({ active: false, startX: 0, startY: 0, startAngle: 0, moved: 0 })
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px), (max-aspect-ratio: 7/8)')
+    const sync = () => {
+      const m = mq.matches
+      setIsMobile(m)
+      isMobileRef.current = m
+    }
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
 
   useEffect(() => {
     const updateFit = () => {
-      target.current.scaleFit = Math.min(
-        window.innerWidth / 1180,
-        window.innerHeight / 820,
-        1
-      )
+      target.current.scaleFit = isMobileRef.current
+        ? 1
+        : Math.min(window.innerWidth / 1180, window.innerHeight / 820, 1)
     }
     updateFit()
     window.addEventListener('resize', updateFit)
     return () => window.removeEventListener('resize', updateFit)
-  }, [])
+  }, [isMobile])
 
   useEffect(() => {
     target.current.enter = visible ? 1 : 0
@@ -39,8 +58,9 @@ export default function InvitationCard({ visible }) {
       const cy = window.innerHeight / 2
       const dx = (e.clientX - cx) / window.innerWidth
       const dy = (e.clientY - cy) / window.innerHeight
-      target.current.tx = -dy * 9
-      target.current.ty = dx * 14
+      const factor = isMobileRef.current ? 4 : 9
+      target.current.tx = -dy * factor
+      target.current.ty = dx * (factor + 5)
     }
     const onLeave = () => {
       target.current.tx = 0
@@ -68,16 +88,12 @@ export default function InvitationCard({ visible }) {
       c.scaleFit += (t.scaleFit - c.scaleFit) * 0.15
 
       if (drag.current.active) {
-        // While dragging: chase the user's pointer with light smoothing for buttery feel
         c.coverAngle += (t.coverAngle - c.coverAngle) * 0.4
       } else {
-        // After release: slow ease-in-out for a luxurious page flip (~1.6s end-to-end)
         const diff = t.coverAngle - c.coverAngle
         const absDiff = Math.abs(diff)
-        // Symmetric easing — slow start, faster mid, slow finish
-        const progress = 1 - absDiff / 180  // 0 at start, ~1 near target
+        const progress = 1 - absDiff / 180
         const easeFactor = 0.5 - 0.45 * Math.cos(Math.PI * Math.min(1, Math.max(0, progress)))
-        // Base speed scaled by easing; gives ~80 frames (1.3s @ 60fps) for full open/close
         const k = 0.025 + 0.06 * easeFactor
         c.coverAngle += diff * k
       }
@@ -97,17 +113,19 @@ export default function InvitationCard({ visible }) {
         cardRef.current.style.opacity = String(eased)
       }
 
-      if (coverRef.current) {
+      if (!isMobileRef.current && coverRef.current) {
         const a = c.coverAngle
         const tz = 4 * (1 - Math.abs(a) / 180)
         coverRef.current.style.transform =
           `translateZ(${tz.toFixed(2)}px) rotateY(${a.toFixed(2)}deg)`
       }
-      if (frontRef.current) {
-        frontRef.current.style.opacity = c.coverAngle > -90 ? '1' : '0'
-      }
-      if (leftBackRef.current) {
-        leftBackRef.current.style.opacity = c.coverAngle < -90 ? '1' : '0'
+      if (!isMobileRef.current) {
+        if (frontRef.current) frontRef.current.style.opacity = c.coverAngle > -90 ? '1' : '0'
+        if (leftBackRef.current) leftBackRef.current.style.opacity = c.coverAngle < -90 ? '1' : '0'
+      } else {
+        if (frontRef.current && frontRef.current.style.opacity) frontRef.current.style.opacity = ''
+        if (leftBackRef.current && leftBackRef.current.style.opacity) leftBackRef.current.style.opacity = ''
+        if (coverRef.current && coverRef.current.style.transform) coverRef.current.style.transform = ''
       }
 
       raf = requestAnimationFrame(step)
@@ -120,6 +138,7 @@ export default function InvitationCard({ visible }) {
     if (!visible) return
     drag.current.active = true
     drag.current.startX = e.clientX
+    drag.current.startY = e.clientY
     drag.current.startAngle = target.current.coverAngle
     drag.current.moved = 0
     e.target.setPointerCapture?.(e.pointerId)
@@ -128,7 +147,9 @@ export default function InvitationCard({ visible }) {
   const handleDrag = (e) => {
     if (!drag.current.active) return
     const dx = e.clientX - drag.current.startX
-    drag.current.moved = Math.max(drag.current.moved, Math.abs(dx))
+    const dy = e.clientY - drag.current.startY
+    drag.current.moved = Math.max(drag.current.moved, Math.hypot(dx, dy))
+    if (isMobileRef.current) return
     target.current.coverAngle = Math.max(
       OPEN_ANGLE,
       Math.min(CLOSED_ANGLE, drag.current.startAngle - dx * 0.45)
@@ -140,7 +161,27 @@ export default function InvitationCard({ visible }) {
     drag.current.active = false
     e.target.releasePointerCapture?.(e.pointerId)
 
-    if (drag.current.moved < 6) {
+    const wasClick = drag.current.moved < 8
+
+    if (isMobileRef.current) {
+      const dx = e.clientX - drag.current.startX
+      const dy = e.clientY - drag.current.startY
+      if (wasClick) {
+        setMobilePage((p) => Math.min(MOBILE_PAGES.length - 1, p + 1))
+        return
+      }
+      // Vertical swipe: up = next page, down = previous page
+      if (Math.abs(dy) > 40 && Math.abs(dy) > Math.abs(dx)) {
+        if (dy < 0) setMobilePage((p) => Math.min(MOBILE_PAGES.length - 1, p + 1))
+        else setMobilePage((p) => Math.max(0, p - 1))
+      } else if (Math.abs(dx) > 40) {
+        if (dx < 0) setMobilePage((p) => Math.min(MOBILE_PAGES.length - 1, p + 1))
+        else setMobilePage((p) => Math.max(0, p - 1))
+      }
+      return
+    }
+
+    if (wasClick) {
       const next = !open
       setOpen(next)
       target.current.coverAngle = next ? OPEN_ANGLE : CLOSED_ANGLE
@@ -152,39 +193,64 @@ export default function InvitationCard({ visible }) {
     }
   }
 
+  const stageClass = 'card-area' + (isMobile ? ' mobile-mode' : '')
+  const positionClass = (idx) => {
+    if (!isMobile) return ''
+    if (idx === mobilePage) return 'is-active'
+    if (idx < mobilePage) return 'is-above'
+    return 'is-below'
+  }
+
   return (
-    <div className="card-stage">
-      <div
-        className="card-area"
-        ref={cardRef}
-        onPointerDown={handleDown}
-        onPointerMove={handleDrag}
-        onPointerUp={handleUp}
-        onPointerCancel={handleUp}
-      >
-        {/* Right (inside-right) — always present */}
-        <div className="panel right">
-          <div className="panel-side panel-front">
-            <InsideRightFace />
+    <>
+      <div className="card-stage">
+        <div
+          className={stageClass}
+          ref={cardRef}
+          onPointerDown={handleDown}
+          onPointerMove={handleDrag}
+          onPointerUp={handleUp}
+          onPointerCancel={handleUp}
+        >
+          <div className={`panel cover ${positionClass(0)}`} ref={coverRef}>
+            <div className="panel-side panel-front" ref={frontRef}>
+              <CoverFace />
+            </div>
           </div>
-        </div>
 
-        {/* Left-back (inside-left) — fades in once cover passes 90° */}
-        <div className="panel left-back" ref={leftBackRef}>
-          <div className="panel-side panel-front">
-            <InsideLeftFace />
+          <div className={`panel left-back ${positionClass(1)}`} ref={leftBackRef}>
+            <div className="panel-side panel-front">
+              <InsideLeftFace />
+            </div>
           </div>
-        </div>
 
-        {/* Cover (page 1) — rotates around its left edge to open */}
-        <div className="panel cover" ref={coverRef}>
-          <div className="panel-side panel-front" ref={frontRef}>
-            <CoverFace />
+          <div className={`panel right ${positionClass(2)}`}>
+            <div className="panel-side panel-front">
+              <InsideRightFace />
+            </div>
           </div>
-        </div>
 
-        <div className="spine" />
+          <div className="spine" />
+        </div>
       </div>
-    </div>
+
+      {isMobile && (
+        <nav className="page-index" aria-label="Pages">
+          {MOBILE_PAGES.map((p, i) => (
+            <button
+              key={p.key}
+              type="button"
+              className={'page-index-item' + (mobilePage === i ? ' is-active' : '')}
+              onClick={() => setMobilePage(i)}
+              aria-current={mobilePage === i ? 'page' : undefined}
+            >
+              <span className="page-index-num">{String(i + 1).padStart(2, '0')}</span>
+              <span className="page-index-dot" />
+              <span className="page-index-label">{p.label}</span>
+            </button>
+          ))}
+        </nav>
+      )}
+    </>
   )
 }

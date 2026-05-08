@@ -787,52 +787,181 @@ body {
   .audio-toggle { width: 36px; height: 36px; top: 14px; right: 14px; }
 }
 
-/* Phone portrait — bifold doesn't fit; show a single inside-right page (events) full-screen,
-   tap to flip through cover and inside-left as full-page slides. */
-@media (max-aspect-ratio: 7/8) {
-  .card-area {
-    width: 90vmin !important;
-    height: calc(90vmin * 720 / 520) !important;
+/* Mobile single-page carousel — driven by .mobile-mode + per-panel .is-active|.is-above|.is-below.
+   Pages slide vertically: above = off the top, below = off the bottom. */
+.card-area.mobile-mode {
+  width: min(82vw, 56vh) !important;
+  height: min(calc(82vw * 720 / 520), 82vh) !important;
+}
+.card-area.mobile-mode .panel {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  transform: translateY(0);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.85s cubic-bezier(0.5, 0.05, 0.18, 1),
+    opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+.card-area.mobile-mode .panel-side {
+  position: absolute;
+  inset: 0;
+}
+.card-area.mobile-mode .panel.is-active {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 3;
+}
+.card-area.mobile-mode .panel.is-above {
+  transform: translateY(-105%) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.card-area.mobile-mode .panel.is-below {
+  transform: translateY(105%) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.card-area.mobile-mode .spine { display: none; }
+
+/* Bottom-center page index — horizontal row that sits below the card */
+.page-index {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  padding: 10px 16px;
+  background: rgba(15, 10, 6, 0.55);
+  border: 1px solid rgba(212, 175, 106, 0.22);
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  max-width: calc(100vw - 24px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.page-index::-webkit-scrollbar { display: none; }
+
+.page-index-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  color: rgba(245, 236, 217, 0.55);
+  letter-spacing: 0.18em;
+  font-size: 10px;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+  border-radius: 999px;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.page-index-item .page-index-num {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: rgba(212, 175, 106, 0.55);
+}
+.page-index-item .page-index-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 106, 0.6);
+  background: transparent;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.page-index-item .page-index-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+}
+.page-index-item.is-active {
+  color: #f0d597;
+  background: rgba(212, 175, 106, 0.08);
+}
+.page-index-item.is-active .page-index-num {
+  color: #f0d597;
+}
+.page-index-item.is-active .page-index-dot {
+  background: #f0d597;
+  border-color: #f0d597;
+  box-shadow: 0 0 10px rgba(240, 213, 151, 0.7);
+  transform: scale(1.25);
+}
+.page-index-item:hover {
+  color: rgba(245, 236, 217, 0.95);
+}
+.page-index-item:hover .page-index-dot {
+  border-color: #f0d597;
+}
+
+/* Hide the desktop "click or drag" hint on mobile — page-index serves as nav */
+@media (max-width: 768px), (max-aspect-ratio: 7/8) {
+  .hint { display: none; }
+  /* Lift the audio toggle so it doesn't crowd the page index when the bar is wide */
+  .audio-toggle { top: 14px; right: 14px; }
+}
+
+@media (max-width: 380px) {
+  .page-index {
+    bottom: 16px;
+    gap: 8px;
+    padding: 8px 12px;
   }
-  /* Hide the right panel (it would extend past the spine which is now the center) */
-  .panel.right { display: none; }
-  /* Promote the LEFT-back to be the visible right page when card is opened */
-  .panel.left-back {
-    left: auto;
-    right: 0;
-    width: 100%;
+  .page-index-item {
+    padding: 4px 8px;
+    gap: 6px;
   }
-  /* Cover anchored on the right, opens to reveal left-back behind */
-  .panel.cover {
-    left: auto;
-    right: 0;
-    width: 100%;
-    transform-origin: left center;
-  }
-  .spine { display: none; }
-  .feather { width: 36px; }
+  .page-index-item .page-index-num,
+  .page-index-item .page-index-label { font-size: 9px; }
+  .page-index-item .page-index-dot { width: 5px; height: 5px; }
+}
+
+/* Mobile typography — keep readable inside a 88vw single panel */
+@media (max-width: 768px), (max-aspect-ratio: 7/8) {
   .face-inner { padding: 18px 16px; inset: 14px; }
-  .bismillah { font-size: 24px; }
-  .cover-title { font-size: 16px; letter-spacing: 0.3em; }
-  .ayat { font-size: 14px; line-height: 1.8; }
-  .ayat-trans { font-size: 11px; }
+  .bismillah { font-size: 22px; }
+  .cover-title { font-size: 14px; letter-spacing: 0.28em; }
+  .cover-sub { font-size: 12px; }
+  .ayat { font-size: 13px; line-height: 1.8; margin: 4px 14px; }
+  .ayat-trans { font-size: 10px; margin: 0 16px; }
+  .ayat-ref { font-size: 9px; }
+  .cover-couple { font-size: 12px; letter-spacing: 0.22em; }
+  .cover-couple .amp { font-size: 18px; }
+  .cover-foot { font-size: 9px; }
   .couple-name { font-size: 18px; letter-spacing: 0.12em; }
   .couple-amp { font-size: 18px; }
-  .event-name { font-size: 13px; letter-spacing: 0.3em; }
-  .event-date { font-size: 17px; }
-  .event-time { font-size: 12px; }
+  .grace { font-size: 12px; }
+  .event-name { font-size: 12px; letter-spacing: 0.3em; }
+  .event-date { font-size: 16px; }
+  .event-time { font-size: 11px; }
   .event-venue { font-size: 11px; }
   .families { gap: 6px; }
   .family-name { font-size: 12px; }
   .family-relation { font-size: 10px; }
   .family-label { font-size: 9px; }
-  .left-page .invite-msg { font-size: 11px; margin: 6px 6px 0; }
+  .family-and { font-size: 11px; }
+  .family-city { font-size: 8px; }
+  .left-page .invite-msg { font-size: 11px; margin: 6px 6px 0; line-height: 1.55; }
   .signoff { font-size: 9.5px; }
-  .hint { font-size: 8px; bottom: 14px; }
-}
-
-/* Mobile portrait phones — handful of small tweaks for sub-380px width */
-@media (max-width: 380px) {
-  .card-area { width: 94vmin !important; }
-  .feather { width: 28px; opacity: 0.55; }
+  .hint { font-size: 8px; bottom: 14px; letter-spacing: 0.3em; }
+  .corner { width: 38px; height: 38px; }
+  .inside h2 { font-size: 11px; letter-spacing: 0.4em; }
+  .inside .blessed { font-size: 12px; }
 }
