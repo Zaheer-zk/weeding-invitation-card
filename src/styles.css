@@ -1,0 +1,838 @@
+:root {
+  --gold: #d4af6a;
+  --gold-bright: #f0d597;
+  --gold-deep: #8a6321;
+  --ivory: #f5ecd9;
+  --ivory-soft: #efe3c9;
+  --emerald: #0f3b2e;
+  --emerald-deep: #082019;
+  --bg: #07060a;
+  --bg-2: #0d0a0f;
+  --paper: #f7eed8;
+  --paper-shadow: rgba(20, 12, 4, 0.55);
+  --ink: #2a1f12;
+  --ink-soft: #4a3a23;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ivory);
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 35%, rgba(212, 175, 106, 0.10), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 90%, rgba(15, 59, 46, 0.18), transparent 60%),
+    linear-gradient(180deg, #07060a 0%, #0a0907 50%, #050407 100%);
+}
+
+.app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+.canvas-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+/* ===== Welcome Overlay ===== */
+.welcome {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(12, 8, 4, 0.55), rgba(0, 0, 0, 0.92) 70%);
+  z-index: 30;
+  pointer-events: none;
+}
+
+.welcome-inner {
+  text-align: center;
+  position: relative;
+}
+
+.welcome-line {
+  width: 1px;
+  height: 60px;
+  margin: 0 auto 28px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  opacity: 0.7;
+}
+
+.welcome-bismillah {
+  font-family: 'Amiri', serif;
+  font-size: clamp(20px, 3vw, 30px);
+  color: var(--gold-bright);
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+  font-weight: 400;
+}
+
+.welcome-text {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(36px, 6vw, 64px);
+  letter-spacing: 0.5em;
+  color: var(--ivory);
+  text-transform: uppercase;
+  margin: 0;
+  font-weight: 400;
+  text-shadow: 0 0 30px rgba(212, 175, 106, 0.35);
+}
+
+.welcome-sub {
+  margin-top: 22px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  letter-spacing: 0.25em;
+  font-size: clamp(11px, 1.4vw, 14px);
+  color: var(--gold);
+  opacity: 0.85;
+  text-transform: uppercase;
+}
+
+/* ===== Hint ===== */
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 5;
+  text-align: center;
+  pointer-events: none;
+  letter-spacing: 0.4em;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  color: rgba(245, 236, 217, 0.55);
+}
+
+.hint .pulse {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  background: var(--gold);
+  box-shadow: 0 0 16px var(--gold);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* ===== Audio toggle ===== */
+.audio-toggle {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 12;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(20, 14, 6, 0.55);
+  border: 1px solid rgba(212, 175, 106, 0.35);
+  color: var(--gold-bright);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.audio-toggle:hover {
+  background: rgba(40, 28, 12, 0.7);
+  border-color: var(--gold);
+  box-shadow: 0 0 24px rgba(212, 175, 106, 0.25);
+}
+
+.audio-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ===== CSS-3D Card stage ===== */
+.card-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 2600px;
+  perspective-origin: center 46%;
+  z-index: 5;
+  pointer-events: none;
+  transition: opacity 0.9s ease;
+}
+
+.card-area {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1040px;
+  height: 720px;
+  pointer-events: auto;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  width: 520px;
+  height: 720px;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  border-radius: 6px;
+  /* No filter here: filter creates a stacking context that flattens 3D children. */
+}
+
+.panel.right {
+  right: 0;
+}
+
+/* Inside-left panel: sits in the left half, hidden until the cover swings past 90° */
+.panel.left-back {
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: opacity 0.18s linear;
+  transform: translateZ(0.4px);
+}
+
+.panel.cover {
+  left: 520px;
+  transform-origin: left center;
+  will-change: transform;
+  cursor: grab;
+  /* No CSS transition: rAF in InvitationCard drives transform every frame */
+}
+.panel.cover:active { cursor: grabbing; }
+.panel.cover:hover { filter: brightness(1.05); }
+
+.panel-side {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(160, 120, 50, 0.18),
+    0 18px 36px rgba(0, 0, 0, 0.45),
+    inset 0 0 60px rgba(120, 86, 32, 0.18);
+}
+
+.panel-side.panel-front {
+  transform: translateZ(0.6px);
+}
+
+.spine {
+  position: absolute;
+  left: 520px;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  margin-left: -3px;
+  background: linear-gradient(
+    to bottom,
+    #5a3f12 0%,
+    #d4af6a 25%,
+    #f0d597 50%,
+    #d4af6a 75%,
+    #5a3f12 100%
+  );
+  box-shadow: 0 0 22px rgba(212, 175, 106, 0.45);
+  pointer-events: none;
+  transform: translateZ(2px);
+  border-radius: 1px;
+}
+
+/* ===== Card HTML faces ===== */
+.face {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at top, rgba(255, 245, 220, 0.55), transparent 60%),
+    linear-gradient(135deg, #f9f1da 0%, #efe3c4 50%, #e3d2a8 100%);
+  color: var(--ink);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(120, 86, 32, 0.18);
+  font-family: 'Cormorant Garamond', serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.face::before {
+  /* paper grain */
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(120, 86, 32, 0.07) 1px, transparent 1px),
+    radial-gradient(rgba(120, 86, 32, 0.05) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 2px;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+.face-inner {
+  position: absolute;
+  inset: 26px;
+  border: 1px solid rgba(160, 120, 50, 0.35);
+  border-radius: 3px;
+  padding: 30px 30px 26px;
+  display: flex;
+  flex-direction: column;
+}
+
+.face-inner::before,
+.face-inner::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(160, 120, 50, 0.55), transparent);
+}
+.face-inner::before { top: 14px; }
+.face-inner::after { bottom: 14px; }
+
+/* ===== Front cover ===== */
+.cover {
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+}
+
+.crescent {
+  margin: 6px auto 0;
+}
+
+.bismillah {
+  font-family: 'Amiri', serif;
+  direction: rtl;
+  font-size: 32px;
+  color: var(--gold-deep);
+  margin: 14px 0 6px;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.6);
+}
+
+.bismillah-trans {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-soft);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+  color: var(--gold-deep);
+}
+
+.divider .line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-deep), transparent);
+  max-width: 110px;
+}
+
+.divider .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold-deep);
+  opacity: 0.85;
+}
+
+.cover-title {
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin: 6px 0 4px;
+}
+
+.cover-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.ayat {
+  font-family: 'Amiri', serif;
+  direction: rtl;
+  font-size: 17px;
+  line-height: 2;
+  color: var(--ink);
+  margin: 6px 24px 8px;
+}
+
+.ayat-trans {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0 26px 6px;
+  line-height: 1.5;
+}
+
+.ayat-ref {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.cover-couple {
+  margin-top: 10px;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.3em;
+  font-size: 14px;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+}
+
+.cover-couple .amp {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 22px;
+  letter-spacing: 0;
+  color: var(--ink-soft);
+  margin: 4px 0;
+  text-transform: none;
+}
+
+.cover-foot {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  letter-spacing: 0.25em;
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.corner {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+.corner.tl { top: 8px; left: 8px; }
+.corner.tr { top: 8px; right: 8px; transform: scaleX(-1); }
+.corner.bl { bottom: 8px; left: 8px; transform: scaleY(-1); }
+.corner.br { bottom: 8px; right: 8px; transform: scale(-1, -1); }
+
+/* Photographic horizontal feather — calamus near the spine top, body curves up-right */
+.spine-feather {
+  position: absolute;
+  left: 520px;
+  top: -120px;
+  width: 400px;
+  height: 160px;
+  margin-left: -80px;       /* the feather's calamus (left side of SVG) sits near the spine */
+  pointer-events: none;
+  z-index: 14;
+  transform: translateZ(48px) rotate(-12deg);
+  transform-origin: 80px 130px; /* origin at the calamus position so the sway pivots there */
+  animation: featherSway 6s ease-in-out infinite alternate;
+  will-change: transform;
+  filter:
+    drop-shadow(0 18px 26px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35))
+    drop-shadow(0 3px 6px rgba(120, 86, 32, 0.45));
+}
+.feather3d {
+  width: 100%;
+  height: 100%;
+}
+.feather3d svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@keyframes featherSway {
+  0%   { transform: translateZ(48px) rotate(-12deg) translateY(0px); }
+  50%  { transform: translateZ(56px) rotate(-7deg) translateY(-3px); }
+  100% { transform: translateZ(48px) rotate(-3deg) translateY(0px); }
+}
+
+/* Top-center header ornament — sits above the bismillah on inside pages */
+.header-ornament {
+  display: block;
+  margin: 0 auto 8px;
+  opacity: 0.85;
+}
+
+/* ===== Inside panels ===== */
+.inside {
+  text-align: center;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* ----- Left (inside) page: Indian Muslim invitation layout ----- */
+.left-page {
+  padding: 26px 28px 22px;
+  gap: 10px;
+}
+
+.left-bismillah { text-align: center; }
+.bismillah.small {
+  font-size: 22px;
+  margin: 4px 0 4px;
+  letter-spacing: 0;
+}
+.left-bismillah .bismillah-trans { margin-bottom: 6px; }
+
+.couple-block.top { margin: 4px 0 2px; }
+.couple-block.top .couple-name { font-size: 26px; }
+.couple-block.top .couple-amp { font-size: 24px; margin: 2px 0; }
+
+.grace {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 4px 0 10px;
+}
+
+.families {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 6px 0 6px;
+  text-align: center;
+}
+
+.family {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 4px;
+}
+
+.family-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.family-relation {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-soft);
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.family-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+
+.family-and {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--gold-deep);
+  margin: 1px 0;
+}
+
+.family-city {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 0.35em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.family-divider {
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(160, 120, 50, 0.5) 30%,
+    rgba(160, 120, 50, 0.5) 70%,
+    transparent
+  );
+  margin: 4px 2px;
+}
+
+.left-page .invite-msg {
+  font-size: 13.5px;
+  margin: 8px 14px 6px;
+  line-height: 1.65;
+}
+
+.left-foot {
+  margin-top: auto;
+}
+
+.signoff {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.inside h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 0.5em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  margin: 0 0 6px;
+  font-weight: 500;
+}
+
+.inside .blessed {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin: 0 0 12px;
+  letter-spacing: 0.05em;
+}
+
+.couple-block {
+  margin: 6px 0 4px;
+}
+
+.couple-name {
+  font-family: 'Cinzel', serif;
+  font-size: 28px;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  text-transform: uppercase;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.couple-amp {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 28px;
+  color: var(--gold-deep);
+  margin: 6px 0;
+  text-transform: none;
+}
+
+.parents {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 14px 0 6px;
+}
+
+.parents .label {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: var(--gold-deep);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.parents .name {
+  font-style: italic;
+}
+
+.invite-msg {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.7;
+  margin: 14px 18px 0;
+  font-style: italic;
+}
+
+/* Right panel events */
+.event {
+  margin: 8px 0;
+}
+.event-name {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  letter-spacing: 0.4em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.event-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  margin: 2px 0;
+}
+.event-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+  margin: 2px 0 4px;
+}
+.event-venue {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
+  margin: 0 12px;
+}
+
+.dua {
+  margin-top: auto;
+  padding-top: 10px;
+}
+.dua .ayat {
+  font-size: 16px;
+  margin: 4px 14px 4px;
+}
+.dua .ayat-trans {
+  font-size: 12px;
+  margin: 0 14px;
+}
+
+/* ===== Loader (suspense fallback) ===== */
+.loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  pointer-events: none;
+}
+.loader .ring {
+  width: 56px;
+  height: 56px;
+  border: 1px solid rgba(212, 175, 106, 0.25);
+  border-top-color: var(--gold-bright);
+  border-radius: 50%;
+  animation: spin 1.4s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== Responsive ===== */
+
+/* Tablet & narrow desktop: bring perspective closer so the open card occupies more of the viewport */
+@media (max-width: 1180px) {
+  .card-stage { perspective: 2000px; perspective-origin: center 50%; }
+  .hint { bottom: 18px; font-size: 9px; }
+}
+
+/* Phone landscape & small tablet portrait — reduce the cover-front decoration weight */
+@media (max-width: 900px) {
+  .card-stage { perspective: 1700px; }
+  .feather { width: 42px; opacity: 0.65; }
+  .header-ornament { transform: scale(0.85); margin-bottom: 4px; }
+  .audio-toggle { width: 36px; height: 36px; top: 14px; right: 14px; }
+}
+
+/* Phone portrait — bifold doesn't fit; show a single inside-right page (events) full-screen,
+   tap to flip through cover and inside-left as full-page slides. */
+@media (max-aspect-ratio: 7/8) {
+  .card-area {
+    width: 90vmin !important;
+    height: calc(90vmin * 720 / 520) !important;
+  }
+  /* Hide the right panel (it would extend past the spine which is now the center) */
+  .panel.right { display: none; }
+  /* Promote the LEFT-back to be the visible right page when card is opened */
+  .panel.left-back {
+    left: auto;
+    right: 0;
+    width: 100%;
+  }
+  /* Cover anchored on the right, opens to reveal left-back behind */
+  .panel.cover {
+    left: auto;
+    right: 0;
+    width: 100%;
+    transform-origin: left center;
+  }
+  .spine { display: none; }
+  .feather { width: 36px; }
+  .face-inner { padding: 18px 16px; inset: 14px; }
+  .bismillah { font-size: 24px; }
+  .cover-title { font-size: 16px; letter-spacing: 0.3em; }
+  .ayat { font-size: 14px; line-height: 1.8; }
+  .ayat-trans { font-size: 11px; }
+  .couple-name { font-size: 18px; letter-spacing: 0.12em; }
+  .couple-amp { font-size: 18px; }
+  .event-name { font-size: 13px; letter-spacing: 0.3em; }
+  .event-date { font-size: 17px; }
+  .event-time { font-size: 12px; }
+  .event-venue { font-size: 11px; }
+  .families { gap: 6px; }
+  .family-name { font-size: 12px; }
+  .family-relation { font-size: 10px; }
+  .family-label { font-size: 9px; }
+  .left-page .invite-msg { font-size: 11px; margin: 6px 6px 0; }
+  .signoff { font-size: 9.5px; }
+  .hint { font-size: 8px; bottom: 14px; }
+}
+
+/* Mobile portrait phones — handful of small tweaks for sub-380px width */
+@media (max-width: 380px) {
+  .card-area { width: 94vmin !important; }
+  .feather { width: 28px; opacity: 0.55; }
+}
