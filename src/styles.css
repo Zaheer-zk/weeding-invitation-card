@@ -52,6 +52,51 @@ body {
   inset: 0;
 }
 
+/* ===== Drifting rose & gold petals ===== */
+.petals {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 3; /* above the 3D canvas, behind the card */
+}
+.petal {
+  position: absolute;
+  top: 0;
+  will-change: transform;
+  animation: petalFall var(--fall) linear var(--delay) infinite;
+}
+.petal-sway {
+  display: block;
+  will-change: transform;
+  animation: petalSway var(--sway) ease-in-out var(--delay) infinite alternate;
+}
+.petal-svg {
+  display: block;
+  width: var(--size);
+  height: auto;
+  opacity: var(--op);
+  will-change: transform;
+  animation: petalSpin var(--rot) linear var(--delay) infinite;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+}
+.petal-rose { filter: drop-shadow(0 2px 4px rgba(120, 40, 50, 0.25)); }
+.petal-gold { filter: drop-shadow(0 2px 4px rgba(120, 86, 32, 0.3)); }
+@keyframes petalFall {
+  from { transform: translateY(-14vh); }
+  to   { transform: translateY(114vh); }
+}
+@keyframes petalSway {
+  from { transform: translateX(calc(var(--drift) * -1)); }
+  to   { transform: translateX(var(--drift)); }
+}
+@keyframes petalSpin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .petals { display: none; }
+}
+
 /* ===== Welcome Overlay ===== */
 .welcome {
   position: absolute;

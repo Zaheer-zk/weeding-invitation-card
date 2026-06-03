@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Scene from './components/Scene'
+import Petals from './components/Petals'
 import WelcomeOverlay from './components/WelcomeOverlay'
 import InvitationCard from './components/InvitationCard'
 import { startAmbient, stopAmbient } from './lib/ambientAudio'
+import { setSfxEnabled } from './lib/sfx'
 
 export default function App() {
   const [showWelcome, setShowWelcome] = useState(true)
@@ -11,6 +13,11 @@ export default function App() {
   const [audioOn, setAudioOn] = useState(false)
   const audioRef = useRef(null)
   const usingFileRef = useRef(false)
+
+  // Keep UI sound effects (page-turn) in step with the ambience toggle.
+  useEffect(() => {
+    setSfxEnabled(audioOn)
+  }, [audioOn])
 
   useEffect(() => {
     const t1 = setTimeout(() => setShowWelcome(false), 4400)
@@ -78,6 +85,8 @@ export default function App() {
       <div className="canvas-wrap">
         <Scene />
       </div>
+
+      <Petals />
 
       <InvitationCard visible={cardVisible} />
 
