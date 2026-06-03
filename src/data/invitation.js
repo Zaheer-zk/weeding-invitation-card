@@ -18,11 +18,11 @@ export const invitation = {
   nikkah: {
     date: 'Friday, 24 July 2026',
     time: 'After Asr Prayer',
-    venue: 'Khandela',
+    venue: 'Siras Masjid, Khandela',
     // Absolute time (India, UTC+05:30) for the countdown & calendar (After Asr ≈ 5:30 PM)
     start: '2026-07-24T17:30:00+05:30',
     end: '2026-07-24T19:30:00+05:30',
-    map: 'https://www.google.com/maps/search/?api=1&query=Khandela+Sikar+Rajasthan',
+    map: 'https://maps.app.goo.gl/8K1TzkDQF5Jxjt4e9',
   },
   walima: {
     date: 'Sunday, 26 July 2026',
