@@ -1,6 +1,53 @@
 import React from 'react'
 import { invitation } from '../data/invitation'
 import { CornerOrnament, Crescent, ArabesqueDivider } from './Ornaments'
+import Countdown from './Countdown'
+import { googleCalendarUrl } from '../lib/calendar'
+
+// Stop card-flip / page-nav handlers from firing when a link is tapped.
+const stop = (e) => e.stopPropagation()
+
+function EventActions({ title, event }) {
+  const calUrl = googleCalendarUrl({
+    title,
+    start: event.start,
+    end: event.end,
+    details: `${title} of Zaheer Khan & Alfiya Shaikh — ${event.time}`,
+    location: event.venue,
+  })
+  return (
+    <div className="event-actions">
+      <a
+        className="event-action"
+        href={calUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        onPointerDown={stop}
+        onClick={stop}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="4.5" width="18" height="17" rx="2" />
+          <path d="M3 9h18M8 2.5v4M16 2.5v4M12 13v4M10 15h4" />
+        </svg>
+        <span>Add to Calendar</span>
+      </a>
+      <a
+        className="event-action"
+        href={event.map}
+        target="_blank"
+        rel="noopener noreferrer"
+        onPointerDown={stop}
+        onClick={stop}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 21s-7-6.3-7-11a7 7 0 0114 0c0 4.7-7 11-7 11z" />
+          <circle cx="12" cy="10" r="2.5" />
+        </svg>
+        <span>View Location</span>
+      </a>
+    </div>
+  )
+}
 
 function Corners() {
   return (
@@ -121,11 +168,14 @@ export function InsideRightFace() {
           <div className="blessed">honour us with your presence</div>
         </div>
 
+        <Countdown target={invitation.countdownTo} />
+
         <div className="event">
           <div className="event-name">Nikkah</div>
           <div className="event-date">{nikkah.date}</div>
           <div className="event-time">{nikkah.time}</div>
           <div className="event-venue">{nikkah.venue}</div>
+          <EventActions title="Nikkah" event={nikkah} />
         </div>
 
         <ArabesqueDivider />
@@ -135,6 +185,7 @@ export function InsideRightFace() {
           <div className="event-date">{walima.date}</div>
           <div className="event-time">{walima.time}</div>
           <div className="event-venue">{walima.venue}</div>
+          <EventActions title="Walima" event={walima} />
         </div>
 
         <div className="dua">

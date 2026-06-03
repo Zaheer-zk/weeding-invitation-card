@@ -184,6 +184,30 @@ body {
   transition: opacity 0.9s ease;
 }
 
+/* Soft luminous halo behind the card — sits above the dark canvas, below the card */
+.card-stage::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(120vw, 1300px);
+  height: min(120vh, 1000px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 42% 46% at 50% 50%, rgba(212, 175, 106, 0.22), transparent 62%),
+    radial-gradient(ellipse 30% 34% at 50% 56%, rgba(15, 59, 46, 0.28), transparent 70%);
+  filter: blur(8px);
+  animation: haloBreathe 7s ease-in-out infinite;
+}
+@keyframes haloBreathe {
+  0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-stage::before { animation: none; }
+}
+
 .card-area {
   position: absolute;
   left: 50%;
@@ -644,7 +668,7 @@ body {
   font-style: italic;
   font-size: 15px;
   color: var(--ink-soft);
-  margin: 0 0 12px;
+  margin: 0 0 4px;
   letter-spacing: 0.05em;
 }
 
@@ -705,7 +729,7 @@ body {
 
 /* Right panel events */
 .event {
-  margin: 8px 0;
+  margin: 4px 0;
 }
 .event-name {
   font-family: 'Cinzel', serif;
@@ -740,7 +764,7 @@ body {
 
 .dua {
   margin-top: auto;
-  padding-top: 10px;
+  padding-top: 4px;
 }
 .dua .ayat {
   font-size: 16px;
@@ -749,6 +773,151 @@ body {
 .dua .ayat-trans {
   font-size: 12px;
   margin: 0 14px;
+}
+
+/* ===== Countdown ===== */
+.countdown {
+  text-align: center;
+  margin: 2px 0 4px;
+}
+.countdown-caption {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.countdown-row {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 2px;
+}
+.countdown-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 46px;
+  padding: 6px 6px 5px;
+  border-radius: 6px;
+  background: linear-gradient(160deg, rgba(255, 248, 226, 0.7), rgba(227, 210, 168, 0.35));
+  box-shadow:
+    inset 0 0 0 1px rgba(160, 120, 50, 0.35),
+    0 4px 10px rgba(80, 56, 18, 0.14);
+}
+.countdown-num {
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--gold-deep);
+  text-shadow: 0 1px 0 rgba(255, 245, 214, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+.countdown-unit {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 5px;
+}
+.countdown-colon {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  color: var(--gold-deep);
+  opacity: 0.5;
+  line-height: 1;
+  padding-top: 6px;
+  animation: colonBlink 1s steps(1) infinite;
+}
+@keyframes colonBlink { 50% { opacity: 0.15; } }
+.countdown-blessed {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  color: var(--gold-deep);
+  text-align: center;
+  margin: 8px 0;
+}
+
+/* ===== Event action links (calendar / map) ===== */
+.event-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 9px;
+  flex-wrap: wrap;
+}
+.event-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(160, 120, 50, 0.5);
+  background: rgba(255, 248, 226, 0.45);
+  color: var(--gold-deep);
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.18s ease, color 0.25s ease;
+}
+.event-action svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+.event-action:hover {
+  background: linear-gradient(135deg, #f0d597, #d4af6a);
+  color: #3d2a0a;
+  box-shadow: 0 4px 14px rgba(160, 120, 50, 0.35);
+  transform: translateY(-1px);
+}
+.event-action:active { transform: translateY(0); }
+
+/* ===== Gold-foil shimmer on key text ===== */
+.cover-couple,
+.couple-name,
+.cover-title {
+  background-image: linear-gradient(
+    100deg,
+    var(--gold-deep) 0%,
+    var(--gold-deep) 35%,
+    var(--gold-bright) 50%,
+    var(--gold-deep) 65%,
+    var(--gold-deep) 100%
+  );
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-deep); /* fallback */
+  animation: foilSweep 6.5s ease-in-out infinite;
+}
+.couple-name {
+  /* inside-page names are ink, give them a warmer gilt sweep */
+  background-image: linear-gradient(
+    100deg,
+    var(--ink) 0%,
+    var(--ink) 38%,
+    var(--gold-deep) 50%,
+    var(--ink) 62%,
+    var(--ink) 100%
+  );
+}
+@keyframes foilSweep {
+  0%, 18% { background-position: 120% 0; }
+  60%, 100% { background-position: -40% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cover-couple, .couple-name, .cover-title { animation: none; }
+  .countdown-colon { animation: none; }
 }
 
 /* ===== Loader (suspense fallback) ===== */
@@ -964,4 +1133,12 @@ body {
   .corner { width: 38px; height: 38px; }
   .inside h2 { font-size: 11px; letter-spacing: 0.4em; }
   .inside .blessed { font-size: 12px; }
+  .countdown-caption { font-size: 10px; margin-bottom: 5px; }
+  .countdown-cell { min-width: 36px; padding: 4px 4px 3px; }
+  .countdown-num { font-size: 16px; }
+  .countdown-unit { font-size: 7px; }
+  .countdown-colon { font-size: 15px; padding-top: 4px; }
+  .event-actions { gap: 6px; margin-top: 6px; }
+  .event-action { padding: 4px 8px; font-size: 7.5px; letter-spacing: 0.12em; }
+  .event-action svg { width: 11px; height: 11px; }
 }
