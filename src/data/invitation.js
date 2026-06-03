@@ -27,10 +27,10 @@ export const invitation = {
   walima: {
     date: 'Sunday, 26 July 2026',
     time: '7:00 PM Onwards',
-    venue: 'Rani Mahel, Sikar',
+    venue: 'Pradhan Ji Ka Jaav, Sikar',
     start: '2026-07-26T19:00:00+05:30',
     end: '2026-07-26T22:00:00+05:30',
-    map: 'https://www.google.com/maps/search/?api=1&query=Rani+Mahel+Sikar+Rajasthan',
+    map: 'https://maps.app.goo.gl/KqoqeEMkXQYprwXY7',
   },
   // The moment the countdown ticks toward — the first ceremony (India time).
   countdownTo: '2026-07-24T17:30:00+05:30',
