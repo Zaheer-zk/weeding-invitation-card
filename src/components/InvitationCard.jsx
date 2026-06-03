@@ -132,16 +132,24 @@ export default function InvitationCard({ visible }) {
 
       const e = c.enter
       const eased = 1 - Math.pow(1 - Math.min(1, e), 3)
-      const breathe = Math.sin(performance.now() / 1800) * 0.4
       const s = c.scaleFit * (0.92 + 0.08 * eased)
 
       if (cardRef.current) {
-        cardRef.current.style.transform =
-          `translate(-50%, -50%) ` +
-          `scale(${s}) ` +
-          `translateZ(${(-220) * (1 - eased)}px) ` +
-          `rotateX(${(c.tx + breathe * 0.3).toFixed(3)}deg) ` +
-          `rotateY(${(c.ty + breathe).toFixed(3)}deg)`
+        // When the card is fully entered and not being tilted, emit a flat 2D
+        // transform (no rotate / translateZ). That drops it out of 3D bitmap
+        // sampling so the browser renders crisp text at rest. The full 3D
+        // transform is only used while entering or actively tilting.
+        const resting =
+          !drag.current.active &&
+          eased > 0.999 &&
+          Math.abs(c.tx) < 0.03 &&
+          Math.abs(c.ty) < 0.03
+        cardRef.current.style.transform = resting
+          ? `translate(-50%, -50%) scale(${s})`
+          : `translate(-50%, -50%) scale(${s}) ` +
+            `translateZ(${(-220) * (1 - eased)}px) ` +
+            `rotateX(${c.tx.toFixed(3)}deg) ` +
+            `rotateY(${c.ty.toFixed(3)}deg)`
         cardRef.current.style.opacity = String(eased)
       }
 

@@ -261,7 +261,9 @@ body {
   height: 720px;
   pointer-events: auto;
   transform-style: preserve-3d;
-  will-change: transform;
+  /* No will-change: keeping the card off a pinned GPU layer lets the browser
+     re-rasterize the text at full resolution when the card is at rest, so
+     glyphs stay crisp instead of being sampled from a stale bitmap. */
 }
 
 .panel {
@@ -291,7 +293,6 @@ body {
 .panel.cover {
   left: 520px;
   transform-origin: left center;
-  will-change: transform;
   cursor: grab;
   /* No CSS transition: rAF in InvitationCard drives transform every frame */
 }
