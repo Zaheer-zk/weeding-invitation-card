@@ -959,8 +959,25 @@ body {
 /* Mobile single-page carousel — driven by .mobile-mode + per-panel .is-active|.is-above|.is-below.
    Pages slide vertically: above = off the top, below = off the bottom. */
 .card-area.mobile-mode {
-  width: min(82vw, 56vh) !important;
-  height: min(calc(82vw * 720 / 520), 82vh) !important;
+  /* Lock the 520:720 aspect ratio. Width is the smaller of "86% of the
+     viewport width" and "the width that keeps height within the space left
+     after reserving room for the bottom page-index + top controls".
+     Height is then derived from width so the card never distorts. */
+  --reserve: 132px;
+  --cw: min(86vw, calc((100svh - var(--reserve)) * 520 / 720));
+  width: var(--cw) !important;
+  height: calc(var(--cw) * 720 / 520) !important;
+}
+/* Render every face at its native design size and scale it uniformly to fill
+   the card. --face-scale is set from JS (cardWidth / 520). This makes the
+   mobile card a pixel-perfect scaled copy of the desktop layout, so content
+   never clips on small phones or in landscape — and no per-element font/spacing
+   overrides are needed. */
+.card-area.mobile-mode .face {
+  width: 520px;
+  height: 720px;
+  transform-origin: top left;
+  transform: scale(var(--face-scale, 0.64));
 }
 .card-area.mobile-mode .panel {
   position: absolute !important;
@@ -1102,43 +1119,10 @@ body {
   .page-index-item .page-index-dot { width: 5px; height: 5px; }
 }
 
-/* Mobile typography — keep readable inside a 88vw single panel */
+/* Mobile typography is handled by the uniform --face-scale transform above —
+   the face renders at its native 520×720 design and is scaled to fit, so the
+   desktop type scale carries over proportionally. Only the standalone hint
+   needs a mobile tweak (it lives outside the card). */
 @media (max-width: 768px), (max-aspect-ratio: 7/8) {
-  .face-inner { padding: 18px 16px; inset: 14px; }
-  .bismillah { font-size: 22px; }
-  .cover-title { font-size: 14px; letter-spacing: 0.28em; }
-  .cover-sub { font-size: 12px; }
-  .ayat { font-size: 13px; line-height: 1.8; margin: 4px 14px; }
-  .ayat-trans { font-size: 10px; margin: 0 16px; }
-  .ayat-ref { font-size: 9px; }
-  .cover-couple { font-size: 12px; letter-spacing: 0.22em; }
-  .cover-couple .amp { font-size: 18px; }
-  .cover-foot { font-size: 9px; }
-  .couple-name { font-size: 18px; letter-spacing: 0.12em; }
-  .couple-amp { font-size: 18px; }
-  .grace { font-size: 12px; }
-  .event-name { font-size: 12px; letter-spacing: 0.3em; }
-  .event-date { font-size: 16px; }
-  .event-time { font-size: 11px; }
-  .event-venue { font-size: 11px; }
-  .families { gap: 6px; }
-  .family-name { font-size: 12px; }
-  .family-relation { font-size: 10px; }
-  .family-label { font-size: 9px; }
-  .family-and { font-size: 11px; }
-  .family-city { font-size: 8px; }
-  .left-page .invite-msg { font-size: 11px; margin: 6px 6px 0; line-height: 1.55; }
-  .signoff { font-size: 9.5px; }
   .hint { font-size: 8px; bottom: 14px; letter-spacing: 0.3em; }
-  .corner { width: 38px; height: 38px; }
-  .inside h2 { font-size: 11px; letter-spacing: 0.4em; }
-  .inside .blessed { font-size: 12px; }
-  .countdown-caption { font-size: 10px; margin-bottom: 5px; }
-  .countdown-cell { min-width: 36px; padding: 4px 4px 3px; }
-  .countdown-num { font-size: 16px; }
-  .countdown-unit { font-size: 7px; }
-  .countdown-colon { font-size: 15px; padding-top: 4px; }
-  .event-actions { gap: 6px; margin-top: 6px; }
-  .event-action { padding: 4px 8px; font-size: 7.5px; letter-spacing: 0.12em; }
-  .event-action svg { width: 11px; height: 11px; }
 }

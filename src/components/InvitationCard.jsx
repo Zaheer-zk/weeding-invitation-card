@@ -42,10 +42,31 @@ export default function InvitationCard({ visible }) {
       target.current.scaleFit = isMobileRef.current
         ? 1
         : Math.min(window.innerWidth / 1180, window.innerHeight / 820, 1)
+
+      // On mobile the whole face is rendered at its native 520px design width
+      // and scaled to fit the card; derive that scale from the card's layout
+      // width so the interior never clips. (offsetWidth ignores the rAF
+      // entrance/breathing transform, which we want applied on top.)
+      if (cardRef.current) {
+        if (isMobileRef.current) {
+          const w = cardRef.current.offsetWidth
+          if (w) cardRef.current.style.setProperty('--face-scale', (w / 520).toFixed(4))
+        } else {
+          cardRef.current.style.removeProperty('--face-scale')
+        }
+      }
     }
     updateFit()
+    // Re-measure on the next frame too: on the first mobile render the
+    // mobile-mode width may not be committed yet when this effect runs.
+    const raf = requestAnimationFrame(updateFit)
     window.addEventListener('resize', updateFit)
-    return () => window.removeEventListener('resize', updateFit)
+    window.addEventListener('orientationchange', updateFit)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', updateFit)
+      window.removeEventListener('orientationchange', updateFit)
+    }
   }, [isMobile])
 
   useEffect(() => {
