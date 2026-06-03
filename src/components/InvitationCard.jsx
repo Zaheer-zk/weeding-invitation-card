@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CoverFace, InsideLeftFace, InsideRightFace } from './Faces'
-import { playPageTurn, playHaptic } from '../lib/sfx'
+import { playHaptic } from '../lib/sfx'
 
 const OPEN_ANGLE = -180
 const CLOSED_ANGLE = 0
@@ -74,25 +74,15 @@ export default function InvitationCard({ visible }) {
     target.current.enter = visible ? 1 : 0
   }, [visible])
 
-  // Page-turn rustle + haptic when navigating (skip the initial render).
+  // Subtle haptic tap on mobile page change (skip the initial render).
   const didMountPage = useRef(false)
   useEffect(() => {
     if (!didMountPage.current) {
       didMountPage.current = true
       return
     }
-    playPageTurn()
     playHaptic()
   }, [mobilePage])
-
-  const didMountOpen = useRef(false)
-  useEffect(() => {
-    if (!didMountOpen.current) {
-      didMountOpen.current = true
-      return
-    }
-    playPageTurn()
-  }, [open])
 
   useEffect(() => {
     const onMove = (e) => {
