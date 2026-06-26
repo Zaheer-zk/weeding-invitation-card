@@ -60,7 +60,7 @@ export const invitation = {
   // Guest photo sharing — paste the share link of your Google Form (with a
   // "File upload" question) here. Uploaded photos land in a Drive folder Google
   // creates for that form, which you own. Leave '' to hide the upload section.
-  photoUploadUrl: '',
+  photoUploadUrl: 'https://forms.gle/69j96LFwFP9KaJUP6',
   // The moment the countdown ticks toward — the first ceremony (India time).
   countdownTo: '2026-07-24T17:30:00+05:30',
 };
