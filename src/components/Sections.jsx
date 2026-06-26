@@ -17,7 +17,6 @@ import {
 const firstName = (full) => full.split(' ')[0]
 const G = firstName(invitation.groom.name) // Zaheer
 const B = firstName(invitation.bride.name) // Alfiya
-const INITIALS = `${G[0]} & ${B[0]}`
 
 /* Fade-and-rise wrapper that triggers as the element scrolls into view. */
 function Reveal({ children, className = '', delay = 0, y = 28, as = 'div' }) {
@@ -42,7 +41,11 @@ export function Hero({ onOpen }) {
       <div className="sec-frame">
         <Reveal className="eyebrow" as="p">The Wedding Of</Reveal>
         <Reveal delay={0.1}><DiamondDivider className="gold" /></Reveal>
-        <Reveal delay={0.2} className="hero-monogram">{INITIALS}</Reveal>
+        <Reveal delay={0.2} className="hero-monogram">
+          <span className="hm-letter">{G[0]}</span>
+          <span className="hm-amp">&amp;</span>
+          <span className="hm-letter">{B[0]}</span>
+        </Reveal>
         <Reveal delay={0.35} className="hero-names" as="p">
           {invitation.groom.name} &amp; {invitation.bride.name}
         </Reveal>
@@ -52,9 +55,6 @@ export function Hero({ onOpen }) {
             Open Invitation
           </button>
         </Reveal>
-      </div>
-      <div className="scroll-cue" aria-hidden="true">
-        <span />
       </div>
     </section>
   )
@@ -89,7 +89,7 @@ export function Invitation() {
         <Reveal delay={0.1}><span className="title-rule" /></Reveal>
 
         <Reveal delay={0.2} className="invite-card">
-          <MonogramRing initials={INITIALS} />
+          <MonogramRing left={G[0]} right={B[0]} />
           <p className="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
           <p className="ayat">
             وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا
@@ -230,6 +230,49 @@ export function Venue() {
   )
 }
 
+/* ===================== Family credits roll ===================== */
+function CreditGroup({ title, names }) {
+  return (
+    <div className="credit-group">
+      <p className="credit-head">{title}</p>
+      <ul className="credit-list">
+        {names.map((n) => (
+          <li key={n}>{n}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function FamilyCredits() {
+  const { brothers, sisters } = invitation.family
+  // Duration scales with the number of names so the roll keeps a steady pace.
+  const seconds = (brothers.length + sisters.length) * 2.4 + 8
+  const roll = (
+    <div className="credits-roll-inner" aria-hidden="false">
+      <p className="credits-intro">With love &amp; duas from</p>
+      <CreditGroup title="The Brothers" names={brothers} />
+      <CreditGroup title="The Sisters" names={sisters} />
+      <p className="credits-outro">
+        — and all who hold {G} &amp; {B} in their prayers —
+      </p>
+    </div>
+  )
+  return (
+    <div className="credits">
+      <Reveal className="credits-title" as="p">Our Beloved Family</Reveal>
+      <Reveal delay={0.1}><TildeDivider className="gold" /></Reveal>
+      <div className="credits-window" style={{ '--credits-dur': `${seconds}s` }}>
+        <div className="credits-roll">
+          {roll}
+          {/* duplicate for a seamless infinite loop */}
+          {React.cloneElement(roll, { 'aria-hidden': true })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ===================== Closing ===================== */
 export function Closing() {
   return (
@@ -252,6 +295,8 @@ export function Closing() {
         <Reveal delay={0.7} className="closing-sign" as="p">
           With warm regards, the families of {invitation.groom.family} &amp; {invitation.bride.family}
         </Reveal>
+
+        <FamilyCredits />
       </div>
     </section>
   )

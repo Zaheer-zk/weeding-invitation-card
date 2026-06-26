@@ -1,43 +1,86 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Hero, Families, Invitation, CountdownSection, Venue, Closing } from './components/Sections'
+import { invitation } from './data/invitation'
 import { startAmbient, stopAmbient } from './lib/ambientAudio'
 
-function Intro({ show }) {
+function UploadPhoto() {
+  const url = invitation.photoUploadUrl
+  return (
+    <a
+      className={'upload-fab' + (url ? '' : ' is-disabled')}
+      href={url || undefined}
+      target={url ? '_blank' : undefined}
+      rel="noopener noreferrer"
+      aria-disabled={url ? undefined : 'true'}
+      onClick={(e) => {
+        if (!url) e.preventDefault()
+      }}
+    >
+      <span className="upload-fab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 15V4M8 8l4-4 4 4" />
+          <path d="M5 15v3a2 2 0 002 2h10a2 2 0 002-2v-3" />
+        </svg>
+      </span>
+      <span className="upload-fab-label">
+        <strong>Upload Wedding Photo</strong>
+        <em>{url ? 'Share your snaps with us' : 'Opening soon'}</em>
+      </span>
+    </a>
+  )
+}
+
+function Curtains({ show }) {
+  // Timeline: text fades in → curtains gently part → stage clears.
+  const OPEN_DELAY = 1.9
+  const OPEN_DUR = 2.6
+  // Soft, weighty ease — eases in slowly (the heavy drapes start to move),
+  // glides, then settles, like real stage curtains being drawn open.
+  const ease = [0.65, 0, 0.18, 1]
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          className="intro"
+          className="curtain-stage"
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1.1, ease: 'easeOut' }}
+          transition={{ duration: 0.7, ease: 'easeInOut' }}
         >
-          <div className="intro-inner">
-            <motion.div
-              className="intro-line"
-              initial={{ scaleY: 0, opacity: 0 }}
-              animate={{ scaleY: 1, opacity: 0.7 }}
-              transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            />
-            <motion.p
-              className="intro-bismillah"
-              initial={{ y: 12, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 1.3, delay: 0.35 }}
-            >
-              بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-            </motion.p>
-            <motion.p
-              className="intro-sub"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.2, delay: 1 }}
-            >
-              You are cordially invited
-            </motion.p>
-          </div>
+          <motion.div
+            className="curtain-valance"
+            aria-hidden="true"
+            initial={{ y: 0 }}
+            animate={{ y: '-100%' }}
+            transition={{ delay: OPEN_DELAY + 0.15, duration: OPEN_DUR - 0.2, ease }}
+          />
+
+          {/* As the panels travel out they also gather (scaleX shrinks toward the
+              outer edge) so the velvet bunches at the sides instead of sliding flat. */}
+          <motion.div
+            className="curtain-panel left"
+            initial={{ x: 0, scaleX: 1 }}
+            animate={{ x: '-100.5%', scaleX: 0.78 }}
+            transition={{ delay: OPEN_DELAY, duration: OPEN_DUR, ease }}
+          />
+          <motion.div
+            className="curtain-panel right"
+            initial={{ x: 0, scaleX: 1 }}
+            animate={{ x: '100.5%', scaleX: 0.78 }}
+            transition={{ delay: OPEN_DELAY, duration: OPEN_DUR, ease }}
+          />
+
+          <motion.div
+            className="curtain-content"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: [0, 1, 1, 0], y: [12, 0, 0, -6] }}
+            transition={{ duration: OPEN_DELAY + 0.6, times: [0, 0.28, 0.72, 1], ease: 'easeInOut' }}
+          >
+            <div className="intro-line" />
+            <p className="intro-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+            <p className="intro-sub">You are cordially invited</p>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -52,7 +95,7 @@ export default function App() {
   const familiesRef = useRef(null)
 
   useEffect(() => {
-    const t = setTimeout(() => setShowIntro(false), 3200)
+    const t = setTimeout(() => setShowIntro(false), 4700)
     return () => clearTimeout(t)
   }, [])
 
@@ -122,7 +165,9 @@ export default function App() {
       <Venue />
       <Closing />
 
-      <Intro show={showIntro} />
+      <UploadPhoto />
+
+      <Curtains show={showIntro} />
 
       <button
         type="button"

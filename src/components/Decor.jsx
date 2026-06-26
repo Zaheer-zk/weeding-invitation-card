@@ -114,25 +114,87 @@ export function VenueDecor() {
           <stop offset="1" stopColor="#8a6321" />
         </linearGradient>
       </defs>
-      <g stroke="url(#venueGold)" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-        {/* frame */}
-        <rect x="14" y="14" width="292" height="292" rx="8" />
-        <rect x="26" y="26" width="268" height="268" rx="6" opacity="0.5" />
+      <g stroke="url(#venueGold)" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        {/* ===== ornate double frame ===== */}
+        <g strokeWidth="1.3">
+          <rect x="12" y="12" width="296" height="296" rx="10" />
+          <rect x="22" y="22" width="276" height="276" rx="7" opacity="0.55" />
+        </g>
         {/* corner flourishes */}
-        <path d="M30 64 q0 -34 34 -34 M256 30 q34 0 34 34 M290 256 q0 34 -34 34 M64 290 q-34 0 -34 -34" opacity="0.7" />
-        {/* columns */}
-        <path d="M70 96 v150 M250 96 v150" />
-        <path d="M60 96 h20 M240 96 h20 M60 246 h26 M234 246 h26" />
-        {/* arch / doorway */}
-        <path d="M120 250 v-92 a40 40 0 0 1 80 0 v92" />
-        {/* chandelier */}
-        <path d="M160 70 v22" />
-        <path d="M140 100 q20 14 40 0" />
-        <path d="M144 100 v10 M152 104 v10 M160 106 v12 M168 104 v10 M176 100 v10" />
-        {/* staircase */}
-        <path d="M112 300 v-14 h96 v14 M120 286 v-12 h80 v12 M130 274 v-12 h60 v12 M140 262 v-10 h40 v10" />
-        {/* drapes */}
-        <path d="M96 96 q14 60 0 150 M224 96 q-14 60 0 150" opacity="0.6" />
+        <g strokeWidth="1" opacity="0.8">
+          <path d="M30 58 q0 -28 28 -28 M30 50 q6 -6 14 -6 M52 30 q-6 0 -10 4" />
+          <path d="M290 58 q0 -28 -28 -28 M290 50 q-6 -6 -14 -6 M268 30 q6 0 10 4" />
+          <path d="M30 262 q0 28 28 28 M52 290 q-6 0 -10 -4" />
+          <path d="M290 262 q0 28 -28 28 M268 290 q6 0 10 -4" />
+        </g>
+
+        {/* ===== ceiling cornice & chandelier ===== */}
+        <path d="M70 64 q90 -20 180 0" strokeWidth="0.9" opacity="0.7" />
+        <path d="M160 60 v20" strokeWidth="1" />
+        {/* canopy + tiers of crystals */}
+        <path d="M138 86 q22 -10 44 0 q-22 16 -44 0Z" strokeWidth="1.1" />
+        <path d="M146 92 q14 12 28 0" strokeWidth="0.9" opacity="0.85" />
+        <g strokeWidth="0.8" opacity="0.9">
+          <path d="M142 88 v14 M150 94 v16 M160 96 v20 M170 94 v16 M178 88 v14" />
+          <path d="M138 102 q6 6 8 0 M150 110 q6 6 8 0 M162 116 q6 7 8 0 M174 110 q6 6 8 0" />
+        </g>
+        <circle cx="160" cy="80" r="2.4" strokeWidth="0.8" />
+
+        {/* ===== flanking columns with capitals & bases ===== */}
+        <g strokeWidth="1.1">
+          {/* left column */}
+          <path d="M64 250 v-128" />
+          <path d="M74 250 v-128" />
+          <path d="M58 122 h22 M58 118 q11 -8 22 0" />        {/* capital */}
+          <path d="M56 250 h28 M60 258 h20" />                 {/* base/plinth */}
+          <path d="M66 240 v-108 M72 240 v-108" strokeWidth="0.5" opacity="0.5" /> {/* fluting */}
+          {/* right column */}
+          <path d="M246 250 v-128" />
+          <path d="M256 250 v-128" />
+          <path d="M240 122 h22 M240 118 q11 -8 22 0" />
+          <path d="M236 250 h28 M240 258 h20" />
+          <path d="M248 240 v-108 M254 240 v-108" strokeWidth="0.5" opacity="0.5" />
+        </g>
+
+        {/* ===== draped curtains tied to the sides ===== */}
+        <g strokeWidth="1" opacity="0.85">
+          <path d="M92 104 q-16 70 -4 150 q12 -10 22 -6 q-14 -64 0 -132 q-10 -8 -18 -12Z" />
+          <path d="M97 120 q-8 50 -2 110 M104 116 q-6 54 -1 116" strokeWidth="0.5" opacity="0.6" />
+          <path d="M228 104 q16 70 4 150 q-12 -10 -22 -6 q14 -64 0 -132 q10 -8 18 -12Z" />
+          <path d="M223 120 q8 50 2 110 M216 116 q6 54 1 116" strokeWidth="0.5" opacity="0.6" />
+        </g>
+
+        {/* ===== grand arched doorway with light ===== */}
+        <g strokeWidth="1.2">
+          <path d="M120 250 v-78 a40 40 0 0 1 80 0 v78" />
+          <path d="M128 250 v-74 a32 32 0 0 1 64 0 v74" strokeWidth="0.7" opacity="0.6" />
+          <path d="M160 174 v76" strokeWidth="0.5" opacity="0.4" />
+          <path d="M138 250 v-66 M182 250 v-66" strokeWidth="0.5" opacity="0.4" />
+        </g>
+
+        {/* ===== balustraded grand staircase ===== */}
+        <g strokeWidth="1">
+          <path d="M108 304 v-12 h104 v12" />
+          <path d="M118 292 v-11 h84 v11" />
+          <path d="M128 281 v-10 h64 v10" />
+          <path d="M138 271 v-9 h44 v9" />
+          {/* balusters on the bottom step */}
+          <path d="M112 292 v8 M120 292 v8 M200 292 v8 M208 292 v8" strokeWidth="0.6" opacity="0.7" />
+          {/* hand-rails sweeping down */}
+          <path d="M120 262 q-10 22 -14 42 M200 262 q10 22 14 42" strokeWidth="0.9" />
+        </g>
+
+        {/* ===== floral urns at the base of each column ===== */}
+        <g strokeWidth="0.9" opacity="0.9">
+          {/* left urn */}
+          <path d="M52 268 q12 -8 24 0 l-4 16 q-8 4 -16 0Z" />
+          <path d="M58 268 q6 -14 12 0" />
+          <circle cx="58" cy="258" r="4" /><circle cx="68" cy="256" r="4" /><circle cx="64" cy="250" r="3.5" />
+          {/* right urn */}
+          <path d="M244 268 q12 -8 24 0 l-4 16 q-8 4 -16 0Z" />
+          <path d="M250 268 q6 -14 12 0" />
+          <circle cx="250" cy="258" r="4" /><circle cx="260" cy="256" r="4" /><circle cx="256" cy="250" r="3.5" />
+        </g>
       </g>
     </svg>
   )
@@ -153,14 +215,18 @@ export function EnvelopeDecor() {
 }
 
 /* ===== Monogram ring (oval frame around initials) ===== */
-export function MonogramRing({ initials }) {
+export function MonogramRing({ left, right }) {
   return (
     <div className="monogram-ring" aria-hidden="true">
-      <svg viewBox="0 0 120 150" fill="none" preserveAspectRatio="none">
-        <ellipse cx="60" cy="75" rx="50" ry="68" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.7" />
-        <ellipse cx="60" cy="75" rx="44" ry="62" stroke="currentColor" strokeWidth="0.6" fill="none" opacity="0.4" />
+      <svg viewBox="0 0 120 150" fill="none" preserveAspectRatio="xMidYMid meet">
+        <ellipse cx="60" cy="75" rx="48" ry="66" stroke="currentColor" strokeWidth="1.1" fill="none" opacity="0.75" />
+        <ellipse cx="60" cy="75" rx="42" ry="60" stroke="currentColor" strokeWidth="0.7" fill="none" opacity="0.4" />
       </svg>
-      <span className="monogram-ring-text">{initials}</span>
+      <span className="monogram-ring-text">
+        <span className="mr-letter">{left}</span>
+        <span className="mr-amp">&amp;</span>
+        <span className="mr-letter">{right}</span>
+      </span>
     </div>
   )
 }

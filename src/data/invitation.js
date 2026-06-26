@@ -32,6 +32,35 @@ export const invitation = {
     end: '2026-07-25T22:00:00+05:30',
     map: 'https://maps.app.goo.gl/TCrqVxevACWHVjEj8',
   },
+  // Family members honoured in the closing credits roll.
+  family: {
+    brothers: [
+      'Fareed Khan',
+      'Zohran Khan',
+      'Imtiyaz Khan',
+      'Jawed Khan',
+      'Aamir Khan',
+      'Sameer Khan',
+      'Parvej Khan',
+      'Tohid Khan',
+      'Sobhan Khan',
+      'Danish Khan',
+      'Ayan Khan',
+    ],
+    sisters: [
+      'Parveen Bano',
+      'Naseem Bano',
+      'Sameem Bano',
+      'Amrin Bano',
+      'Afreen Bano',
+      'Sumaiyya Bano',
+      'Nabiya Bano',
+    ],
+  },
+  // Guest photo sharing — paste the share link of your Google Form (with a
+  // "File upload" question) here. Uploaded photos land in a Drive folder Google
+  // creates for that form, which you own. Leave '' to hide the upload section.
+  photoUploadUrl: '',
   // The moment the countdown ticks toward — the first ceremony (India time).
   countdownTo: '2026-07-24T17:30:00+05:30',
 };
