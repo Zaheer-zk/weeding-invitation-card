@@ -25,12 +25,12 @@ export const invitation = {
     map: 'https://maps.app.goo.gl/8K1TzkDQF5Jxjt4e9',
   },
   walima: {
-    date: 'Sunday, 26 July 2026',
+    date: 'Saturday, 25 July 2026',
     time: '7:00 PM Onwards',
-    venue: 'Shekhpura Masjid Madarsa, Sikar',
-    start: '2026-07-26T19:00:00+05:30',
-    end: '2026-07-26T22:00:00+05:30',
-    map: 'https://share.google/XkJuFqxMEWbywTJ9G',
+    venue: 'Prem Vilas Marriage Garden, Sikar',
+    start: '2026-07-25T19:00:00+05:30',
+    end: '2026-07-25T22:00:00+05:30',
+    map: 'https://maps.app.goo.gl/TCrqVxevACWHVjEj8',
   },
   // The moment the countdown ticks toward — the first ceremony (India time).
   countdownTo: '2026-07-24T17:30:00+05:30',
