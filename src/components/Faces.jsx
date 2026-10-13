@@ -12,7 +12,7 @@ function EventActions({ title, event }) {
     title,
     start: event.start,
     end: event.end,
-    details: `${title} of Zaheer Khan & Alfiya Shaikh — ${event.time}`,
+    details: `${title} of ${invitation.groom.name} & ${invitation.bride.name} — ${event.time}`,
     location: event.venue,
   })
   return (
@@ -104,7 +104,7 @@ export function CoverFace() {
 }
 
 export function InsideLeftFace() {
-  const { groom, bride, message } = invitation
+  const { groom, bride, message, family } = invitation
   return (
     <div className="face">
       <Corners />
@@ -129,9 +129,19 @@ export function InsideLeftFace() {
             <div className="family-label">Groom</div>
             <div className="family-relation">Son of</div>
             <div className="family-name">{groom.father}</div>
-            <div className="family-and">&amp;</div>
-            <div className="family-name">{groom.mother}</div>
-            <div className="family-city">{groom.city}</div>
+            {groom.grandfather && (
+              <>
+                <div className="family-relation" style={{ marginTop: 4 }}>Grandson of</div>
+                <div className="family-name">{groom.grandfather}</div>
+              </>
+            )}
+            {groom.mother && (
+              <>
+                <div className="family-and">&amp;</div>
+                <div className="family-name">{groom.mother}</div>
+              </>
+            )}
+            <div className="family-city">{groom.address || groom.city}</div>
           </div>
 
           <div className="family-divider" aria-hidden="true" />
@@ -140,13 +150,28 @@ export function InsideLeftFace() {
             <div className="family-label">Bride</div>
             <div className="family-relation">Daughter of</div>
             <div className="family-name">{bride.father}</div>
-            <div className="family-and">&amp;</div>
-            <div className="family-name">{bride.mother}</div>
-            <div className="family-city">{bride.city}</div>
+            {bride.mother && (
+              <>
+                <div className="family-and">&amp;</div>
+                <div className="family-name">{bride.mother}</div>
+              </>
+            )}
+            <div className="family-city">{bride.address || bride.city}</div>
           </div>
         </div>
 
         <p className="invite-msg">{message}</p>
+
+        {family?.kids && family.kids.length > 0 && (
+          <div className="kids-notice" style={{ margin: '10px 0 4px', textAlign: 'center' }}>
+            <div style={{ fontSize: '11px', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--gold, #d4af37)', fontFamily: 'Cinzel, serif' }}>
+              Bachhon Ki Farmaish
+            </div>
+            <div style={{ fontSize: '14px', fontStyle: 'italic', color: 'var(--ivory, #f8f1e4)', marginTop: 3 }}>
+              {family.kids.join(' • ')}
+            </div>
+          </div>
+        )}
 
         <div className="left-foot">
           <ArabesqueDivider />
@@ -158,7 +183,7 @@ export function InsideLeftFace() {
 }
 
 export function InsideRightFace() {
-  const { nikkah, walima } = invitation
+  const { kangna, nikkah, walima } = invitation
   return (
     <div className="face">
       <Corners />
@@ -170,18 +195,30 @@ export function InsideRightFace() {
 
         <Countdown target={invitation.countdownTo} />
 
+        {kangna && (
+          <div className="event">
+            <div className="event-name">Kangna</div>
+            <div className="event-date">{kangna.date}</div>
+            <div className="event-time">{kangna.time}</div>
+            <div className="event-venue">{kangna.venue}</div>
+            <EventActions title="Kangna" event={kangna} />
+          </div>
+        )}
+
+        {kangna && <ArabesqueDivider />}
+
         <div className="event">
-          <div className="event-name">Nikkah</div>
+          <div className="event-name">Nikah</div>
           <div className="event-date">{nikkah.date}</div>
           <div className="event-time">{nikkah.time}</div>
           <div className="event-venue">{nikkah.venue}</div>
-          <EventActions title="Nikkah" event={nikkah} />
+          <EventActions title="Nikah" event={nikkah} />
         </div>
 
         <ArabesqueDivider />
 
         <div className="event">
-          <div className="event-name">Walima</div>
+          <div className="event-name">Walima (Reception)</div>
           <div className="event-date">{walima.date}</div>
           <div className="event-time">{walima.time}</div>
           <div className="event-venue">{walima.venue}</div>

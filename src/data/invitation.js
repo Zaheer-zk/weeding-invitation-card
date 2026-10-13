@@ -1,4 +1,8 @@
 export const invitation = {
+  /*
+  // ==========================================
+  // PREVIOUS BRIDE & GROOM INFORMATION (COMMENTED)
+  // ==========================================
   groom: {
     name: 'Zaheer Khan',
     father: 'Marhum Samiullah Khan',
@@ -13,8 +17,6 @@ export const invitation = {
     family: 'Shaikh Family',
     city: 'Khandela',
   },
-  message:
-    'request the honour of your gracious presence on the auspicious occasion of the marriage of their beloved children. Your blessings and good wishes will be cherished forever, Insha’Allah.',
   nikkah: {
     date: 'Friday, 24 July 2026',
     time: 'After Asr Prayer',
@@ -32,7 +34,6 @@ export const invitation = {
     end: '2026-07-25T22:00:00+05:30',
     map: 'https://maps.app.goo.gl/TCrqVxevACWHVjEj8',
   },
-  // Family members honoured in the closing credits roll.
   family: {
     brothers: [
       'Fareed Khan',
@@ -57,10 +58,64 @@ export const invitation = {
       'Nabiya Bano',
     ],
   },
-  // Guest photo sharing — paste the share link of your Google Form (with a
-  // "File upload" question) here. Uploaded photos land in a Drive folder Google
-  // creates for that form, which you own. Leave '' to hide the upload section.
-  photoUploadUrl: 'https://forms.gle/69j96LFwFP9KaJUP6',
-  // The moment the countdown ticks toward — the first ceremony (India time).
   countdownTo: '2026-07-24T17:30:00+05:30',
-};
+  */
+
+  groom: {
+    name: 'Umar Nirban',
+    father: 'Idrish Nirban',
+    grandfather: 'Late Fayaz Ali Nirban',
+    family: 'Nirban Family',
+    address: 'Mohalla Zamindaran, Behind Tehsil',
+    city: 'Mohalla Zamindaran, Behind Tehsil',
+  },
+  bride: {
+    name: 'Madiha Chouhan',
+    father: 'Ashfaq Chouhan',
+    family: 'Chouhan Family',
+    address: 'Faiz Manzil, Near Axis Bank, 2 No. Dispensary, Devipura Road',
+    city: 'Devipura Road',
+  },
+  message:
+    'request the honour of your gracious presence on the auspicious occasion of the marriage of their beloved children. Your blessings and good wishes will be cherished forever, Insha’Allah.',
+  kangna: {
+    date: 'Tuesday, 10 November 2026',
+    time: '7:00 PM Onwards',
+    venue: 'Mohalla Zamindaran, Behind Tehsil (Groom’s Residence)',
+    start: '2026-11-10T19:00:00+05:30',
+    end: '2026-11-10T22:30:00+05:30',
+    map: 'https://www.google.com/maps/search/?api=1&query=Mohalla+Zamindaran+Behind+Tehsil',
+  },
+  nikkah: {
+    date: 'Wednesday, 11 November 2026',
+    time: 'After Asr Prayer (5:00 PM)',
+    venue: 'Faiz Manzil, Near Axis Bank, 2 No. Dispensary, Devipura Road (Bride’s Residence)',
+    start: '2026-11-11T17:00:00+05:30',
+    end: '2026-11-11T19:30:00+05:30',
+    map: 'https://www.google.com/maps/search/?api=1&query=Faiz+Manzil+Devipura+Road+Near+Axis+Bank',
+  },
+  walima: {
+    date: 'Thursday, 12 November 2026',
+    time: '7:00 PM Onwards',
+    venue: 'Mohalla Zamindaran, Behind Tehsil (Groom’s Residence)',
+    start: '2026-11-12T19:00:00+05:30',
+    end: '2026-11-12T22:30:00+05:30',
+    map: 'https://www.google.com/maps/search/?api=1&query=Mohalla+Zamindaran+Behind+Tehsil',
+  },
+  // Family members & Children
+  family: {
+    brothers: [],
+    sisters: [],
+    kids: [
+      'Urva',
+      'Mariyam',
+      'Aqsa',
+      'Ayesha',
+      'Anida',
+    ],
+  },
+  // Guest photo sharing
+  photoUploadUrl: 'https://forms.gle/69j96LFwFP9KaJUP6',
+  // Countdown ticks toward the first ceremony (Kangna on 10 November 2026)
+  countdownTo: '2026-11-10T19:00:00+05:30',
+}

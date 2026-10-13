@@ -15,8 +15,8 @@ import {
 } from './Decor'
 
 const firstName = (full) => full.split(' ')[0]
-const G = firstName(invitation.groom.name) // Zaheer
-const B = firstName(invitation.bride.name) // Alfiya
+const G = firstName(invitation.groom.name) // Umar
+const B = firstName(invitation.bride.name) // Madiha
 
 /* Fade-and-rise wrapper that triggers as the element scrolls into view. */
 function Reveal({ children, className = '', delay = 0, y = 28, as = 'div' }) {
@@ -49,7 +49,7 @@ export function Hero({ onOpen }) {
         <Reveal delay={0.35} className="hero-names" as="p">
           {invitation.groom.name} &amp; {invitation.bride.name}
         </Reveal>
-        <Reveal delay={0.5} className="hero-date" as="p">24&nbsp;.&nbsp;07&nbsp;.&nbsp;2026</Reveal>
+        <Reveal delay={0.5} className="hero-date" as="p">10&nbsp;.&nbsp;11&nbsp;.&nbsp;2026</Reveal>
         <Reveal delay={0.65}>
           <button type="button" className="btn-outline" onClick={onOpen}>
             Open Invitation
@@ -62,6 +62,7 @@ export function Hero({ onOpen }) {
 
 /* ===================== Families ===================== */
 export function Families() {
+  const { groom, bride, family } = invitation
   return (
     <section className="sec families cream">
       <div className="sec-frame">
@@ -74,7 +75,51 @@ export function Families() {
         <Reveal delay={0.35}><DiamondDivider className="gold" /></Reveal>
         <Reveal delay={0.45} className="lede" as="p">request the honour of your presence</Reveal>
         <Reveal delay={0.55} className="lede-sub" as="p">at the celebration of their marriage</Reveal>
-        <Reveal delay={0.8} className="scroll-hint" as="p">Scroll to unfold</Reveal>
+
+        {/* Family Details Grid */}
+        <Reveal delay={0.65} className="family-details-grid">
+          <div className="family-card">
+            <span className="family-badge">Groom</span>
+            <h3 className="family-person">{groom.name}</h3>
+            <p className="family-rel">Son of</p>
+            <p className="family-parent">{groom.father}</p>
+            {groom.grandfather && (
+              <>
+                <p className="family-rel sub">Grandson of</p>
+                <p className="family-parent">{groom.grandfather}</p>
+              </>
+            )}
+            <p className="family-addr">{groom.address}</p>
+          </div>
+
+          <div className="family-card-sep" aria-hidden="true">
+            <span className="family-sep-amp">&amp;</span>
+          </div>
+
+          <div className="family-card">
+            <span className="family-badge">Bride</span>
+            <h3 className="family-person">{bride.name}</h3>
+            <p className="family-rel">Daughter of</p>
+            <p className="family-parent">{bride.father}</p>
+            <p className="family-addr">{bride.address}</p>
+          </div>
+        </Reveal>
+
+        {/* Kids Highlight: Bachhon Ki Farmaish */}
+        {family?.kids && family.kids.length > 0 && (
+          <Reveal delay={0.75} className="kids-farmaish-box">
+            <span className="kids-badge">Special Compliments</span>
+            <h4 className="kids-title">Chhote Bachhon Ki Pur-Khuloos Farmaish</h4>
+            <div className="kids-names">
+              {family.kids.map((kid) => (
+                <span key={kid} className="kid-pill">{kid}</span>
+              ))}
+            </div>
+            <p className="kids-quote">“Hamare ghar ki shadi me aap sabhi zaroor zaroor aana!”</p>
+          </Reveal>
+        )}
+
+        <Reveal delay={0.85} className="scroll-hint" as="p">Scroll to unfold</Reveal>
       </div>
     </section>
   )
@@ -219,8 +264,11 @@ export function Venue() {
         <Reveal delay={0.2}><TildeDivider className="gold" /></Reveal>
         <Reveal delay={0.3} className="venue-illu"><VenueDecor /></Reveal>
 
-        <EventBlock label="Nikkah" event={invitation.nikkah} delay={0.15} />
-        <EventBlock label="Walima" event={invitation.walima} delay={0.15} />
+        {invitation.kangna && (
+          <EventBlock label="Kangna" event={invitation.kangna} delay={0.15} />
+        )}
+        <EventBlock label="Nikah" event={invitation.nikkah} delay={0.15} />
+        <EventBlock label="Walima / Reception" event={invitation.walima} delay={0.15} />
 
         <Reveal delay={0.2} className="venue-note" as="p">
           Please be on time to enjoy every blessed moment, Insha’Allah.
@@ -245,14 +293,18 @@ function CreditGroup({ title, names }) {
 }
 
 function FamilyCredits() {
-  const { brothers, sisters } = invitation.family
+  const { brothers = [], sisters = [], kids = [] } = invitation.family || {}
+  const totalCount = brothers.length + sisters.length + kids.length
   // Duration scales with the number of names so the roll keeps a steady pace.
-  const seconds = (brothers.length + sisters.length) * 2.4 + 8
+  const seconds = Math.max(16, totalCount * 2.4 + 8)
   const roll = (
     <div className="credits-roll-inner" aria-hidden="false">
       <p className="credits-intro">With love &amp; duas from</p>
-      <CreditGroup title="The Brothers" names={brothers} />
-      <CreditGroup title="The Sisters" names={sisters} />
+      {brothers.length > 0 && <CreditGroup title="The Brothers" names={brothers} />}
+      {sisters.length > 0 && <CreditGroup title="The Sisters" names={sisters} />}
+      {kids.length > 0 && (
+        <CreditGroup title="Chhote Bachhe (Little Stars)" names={kids} />
+      )}
       <p className="credits-outro">
         — and all who hold {G} &amp; {B} in their prayers —
       </p>
@@ -290,7 +342,7 @@ export function Closing() {
           {G} &amp; {B}
         </Reveal>
         <Reveal delay={0.3}><TildeDivider className="gold" /></Reveal>
-        <Reveal delay={0.4} className="closing-date" as="p">July 24 – 25, 2026</Reveal>
+        <Reveal delay={0.4} className="closing-date" as="p">November 10 – 12, 2026</Reveal>
         <Reveal delay={0.5} className="light"><RingsDecor /></Reveal>
         <Reveal delay={0.7} className="closing-sign" as="p">
           With warm regards, the families of {invitation.groom.family} &amp; {invitation.bride.family}

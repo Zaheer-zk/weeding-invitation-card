@@ -927,3 +927,176 @@ body {
   .cd-foot-art { max-width: 320px; }
   .credits-window { height: 280px; }
 }
+
+/* ===================== Family Details Grid ===================== */
+.family-details-grid {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 680px;
+  margin: 36px auto 16px;
+}
+
+.family-card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 18px;
+  padding: 26px 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(74, 10, 17, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.family-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(74, 10, 17, 0.12);
+}
+
+.family-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--maroon);
+  background: rgba(212, 175, 55, 0.18);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.family-person {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(18px, 3.8vw, 24px);
+  color: var(--maroon);
+  margin: 0 0 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.family-rel {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--maroon-soft);
+  margin: 0 0 2px;
+  letter-spacing: 0.04em;
+}
+
+.family-rel.sub {
+  margin-top: 8px;
+}
+
+.family-parent {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 3.2vw, 21px);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.family-addr {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin-top: auto;
+  padding-top: 14px;
+  line-height: 1.45;
+  border-top: 1px dashed rgba(212, 175, 55, 0.35);
+  width: 100%;
+}
+
+.family-card-sep {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.family-sep-amp {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 32px;
+  color: var(--gold);
+}
+
+/* ===================== Kids Farmaish Box ===================== */
+.kids-farmaish-box {
+  width: 100%;
+  max-width: 580px;
+  margin: 28px auto 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(247, 241, 230, 0.95));
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 20px;
+  padding: 24px 22px;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(110, 13, 30, 0.08);
+}
+
+.kids-badge {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 8px;
+}
+
+.kids-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(14px, 2.8vw, 18px);
+  letter-spacing: 0.12em;
+  color: var(--maroon);
+  margin: 0 0 14px;
+  font-weight: 600;
+}
+
+.kids-names {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.kid-pill {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--maroon);
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 5px 16px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.kids-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(15px, 3vw, 18px);
+  color: var(--maroon-soft);
+  margin: 6px 0 0;
+}
+
+@media (max-width: 640px) {
+  .family-details-grid {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .family-card-sep {
+    display: none;
+  }
+}
+
