@@ -64,7 +64,7 @@ export const invitation = {
   groom: {
     name: 'Umar Nirban',
     father: 'Idrish Nirban',
-    grandfather: 'Late Fayaz Ali Nirban',
+    grandfather: 'Late Fayaz Hussain Kha Nirban',
     family: 'Nirban Family',
     address: 'Mohalla Zamindaran, Behind Tehsil',
     city: 'Mohalla Zamindaran, Behind Tehsil',
@@ -88,10 +88,10 @@ export const invitation = {
   },
   nikkah: {
     date: 'Wednesday, 11 November 2026',
-    time: 'After Asr Prayer (5:00 PM)',
+    time: '7:00 PM',
     venue: 'Faiz Manzil, Near Axis Bank, 2 No. Dispensary, Devipura Road (Bride’s Residence)',
-    start: '2026-11-11T17:00:00+05:30',
-    end: '2026-11-11T19:30:00+05:30',
+    start: '2026-11-11T19:00:00+05:30',
+    end: '2026-11-11T21:30:00+05:30',
     map: 'https://www.google.com/maps/search/?api=1&query=Faiz+Manzil+Devipura+Road+Near+Axis+Bank',
   },
   walima: {
@@ -112,6 +112,13 @@ export const invitation = {
       'Aqsa',
       'Ayesha',
       'Anida',
+      'Nida',
+      'Huda',
+      'Shami',
+      'Aiza',
+      'Juveriya',
+      'Hiba',
+      'Ariba',
     ],
   },
   // Guest photo sharing
